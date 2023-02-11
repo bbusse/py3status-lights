@@ -54,7 +54,9 @@ class Py3status:
 
         # Nothing in storage: Set initial number of LEDs
         if not self.leds:
-            self.py3.log("Storage empty, setting initial values", self.py3.LOG_WARNING)
+            self.py3.log(
+                "Storage empty, setting initial values", self.py3.LOG_WARNING
+            )
             self.leds = 23
 
         # Set initial color index to first element
@@ -170,13 +172,17 @@ class Py3status:
         try:
             self.sock.sendto(bytes.fromhex(msg), (self.host, self.port))
         except Exception as e:
-            self.py3.log("Failed to contact light: " + str(e), self.py3.LOG_ERROR)
+            self.py3.log(
+                "Failed to contact light: " + str(e), self.py3.LOG_ERROR
+            )
 
     def _run_color_picker(self, cmd):
         """
         Run a color picker as external command
         """
-        ps = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
+        ps = subprocess.Popen(
+            cmd, stdout=subprocess.PIPE, universal_newlines=True
+        )
 
         for stdout_line in iter(ps.stdout.readline, ""):
             yield stdout_line
