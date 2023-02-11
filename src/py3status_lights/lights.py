@@ -40,22 +40,21 @@ class Py3status:
     port = 2342
     proto = "rgb"
     leds_total = 100
-    colors = ['68D74C', 'E05B22', 'C60D12']
-    color_picker = ['color_picker']
+    colors = ["68D74C", "E05B22", "C60D12"]
+    color_picker = ["color_picker"]
     icon_bulb = "💡"
     icon_color = "●"
     format = "{icon_bulb} {name} {leds} {icon_color} {color}"
 
     def post_config_hook(self):
         self.ncolors = len(self.colors)
-        self.leds = self.py3.storage_get('leds')
-        self.color = self.py3.storage_get('color')
-        self.color_idx = self.py3.storage_get('color_idx')
+        self.leds = self.py3.storage_get("leds")
+        self.color = self.py3.storage_get("color")
+        self.color_idx = self.py3.storage_get("color_idx")
 
         # Nothing in storage: Set initial number of LEDs
         if not self.leds:
-            self.py3.log("Storage empty, setting initial values",
-                         self.py3.LOG_WARNING)
+            self.py3.log("Storage empty, setting initial values", self.py3.LOG_WARNING)
             self.leds = 23
 
         # Set initial color index to first element
@@ -76,10 +75,9 @@ class Py3status:
         leds = self.leds
 
         return {
-            "full_text": self.py3.safe_format(self.format,
-                                              {"name": name},
-                                              {"color": color},
-                                              {"leds": leds}),
+            "full_text": self.py3.safe_format(
+                self.format, {"name": name}, {"color": color}, {"leds": leds}
+            ),
             "name": name,
             "color": color,
             "icon_bulb": icon_bulb,
@@ -93,7 +91,7 @@ class Py3status:
         """
 
         # Left mouse button: Turn on lights or switch color
-        if event['button'] == 1:
+        if event["button"] == 1:
             self.color_idx += 1
             if self.color_idx > self.ncolors - 1:
                 self.color_idx = 0
@@ -102,25 +100,25 @@ class Py3status:
             self._send_frame()
 
         # Middle mouse button: Open color widget
-        elif event['button'] == 2:
+        elif event["button"] == 2:
             for c in self._run_color_picker(self.color_picker):
-                self.color = c.rstrip('\n')
+                self.color = c.rstrip("\n")
                 self.py3.log(self.color, self.py3.LOG_INFO)
                 self._send_frame()
                 self.py3.update()
 
         # Right mouse button: Turn off
-        elif event['button'] == 3:
+        elif event["button"] == 3:
             self.color = self.py3.COLOR_GOOD
             self._send_frame()
 
         # Scroll up: Increase number of LEDs
-        elif event['button'] == 4:
+        elif event["button"] == 4:
             if self.leds < self.leds_total:
                 self.leds += 1
 
         # Scroll down: Decrease number of LEDs
-        elif event['button'] == 5:
+        elif event["button"] == 5:
             if self.leds > 0:
                 self.leds -= 1
 
@@ -130,9 +128,9 @@ class Py3status:
         """
         Store module state
         """
-        self.py3.storage_set('leds', self.leds)
-        self.py3.storage_set('color', self.color)
-        self.py3.storage_set('color_idx', self.color_idx)
+        self.py3.storage_set("leds", self.leds)
+        self.py3.storage_set("color", self.color)
+        self.py3.storage_set("color_idx", self.color_idx)
 
     def _get_socket(self):
         """
@@ -172,16 +170,13 @@ class Py3status:
         try:
             self.sock.sendto(bytes.fromhex(msg), (self.host, self.port))
         except Exception as e:
-            self.py3.log("Failed to contact light: " + str(e),
-                         self.py3.LOG_ERROR)
+            self.py3.log("Failed to contact light: " + str(e), self.py3.LOG_ERROR)
 
     def _run_color_picker(self, cmd):
         """
         Run a color picker as external command
         """
-        ps = subprocess.Popen(cmd,
-                              stdout=subprocess.PIPE,
-                              universal_newlines=True)
+        ps = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
 
         for stdout_line in iter(ps.stdout.readline, ""):
             yield stdout_line
