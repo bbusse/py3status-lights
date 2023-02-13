@@ -118,11 +118,13 @@ class Py3status:
         elif event["button"] == 4:
             if self.leds < self.leds_total:
                 self.leds += 1
+                self._send_frame()
 
         # Scroll down: Decrease number of LEDs
         elif event["button"] == 5:
             if self.leds > 0:
                 self.leds -= 1
+                self._send_frame()
 
         self._store_state()
 
