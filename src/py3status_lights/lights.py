@@ -162,7 +162,6 @@ class Py3status:
 
         return header
 
-
     def _frame(self, proto, leds, leds_total, color):
         """
         Compose message to send
@@ -181,11 +180,7 @@ class Py3status:
         """
         Send UDP message
         """
-        msg = self._frame(self.proto,
-                          self.leds,
-                          self.leds_total,
-                          self.color)
-
+        msg = self._frame(self.proto, self.leds, self.leds_total, self.color)
 
         try:
             self.sock.sendto(bytes.fromhex(msg), (self.host, self.port))
