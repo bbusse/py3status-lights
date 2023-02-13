@@ -14,12 +14,12 @@ Configuration parameters:
 Format placeholders:
     {name} The name of the light source
     {color} The color to set
-    {icon_bulb} An module icon
+    {icon} An module icon
     {icon_color} An icon showing the color of the light source
     {leds} The number of LEDs to set
 
 Color options:
-    color_good: Default to color_good
+    color: Default to color_good, active color otherwise
 
 @author bbusse, Björn Busse
 
@@ -42,9 +42,9 @@ class Py3status:
     leds_total = 100
     colors = ["68D74C", "E05B22", "C60D12"]
     color_picker = ["color_picker"]
-    icon_bulb = "💡"
+    icon = "💡"
     icon_color = "●"
-    format = "{icon_bulb} {name} {leds} {icon_color} {color}"
+    format = "{icon} {name} {leds} {icon_color} {color}"
 
     def post_config_hook(self):
         self.ncolors = len(self.colors)
@@ -72,7 +72,7 @@ class Py3status:
     def lights(self):
         name = self.name
         color = self.color
-        icon_bulb = self.icon_bulb
+        icon = self.icon
         icon_color = self.icon_color
         leds = self.leds
 
@@ -82,7 +82,7 @@ class Py3status:
             ),
             "name": name,
             "color": color,
-            "icon_bulb": icon_bulb,
+            "icon": icon,
             "icon_color": icon_color,
             "leds": leds,
         }
@@ -149,11 +149,23 @@ class Py3status:
             self.py3.log("Socket error: " + str(e), self.py3.LOG_ERROR)
             return False
 
-    def _frame(self, leds, leds_total, color):
+    def _header(self, proto):
+        header = ""
+
+        if proto == "drgb":
+            header += "020F"
+        elif proto == "artnet":
+            header += "Art-Net0"
+            header += ""
+
+        return header
+
+
+    def _frame(self, proto, leds, leds_total, color):
         """
         Compose message to send
         """
-        frame = ""
+        frame = self._header(proto)
 
         for n in range(leds_total):
             if n < leds:
@@ -167,7 +179,11 @@ class Py3status:
         """
         Send UDP message
         """
-        msg = self._frame(self.leds, self.leds_total, self.color)
+        msg = self._frame(self.proto,
+                          self.leds,
+                          self.leds_total,
+                          self.color)
+
 
         try:
             self.sock.sendto(bytes.fromhex(msg), (self.host, self.port))
