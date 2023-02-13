@@ -111,8 +111,9 @@ class Py3status:
 
         # Right mouse button: Turn off
         elif event["button"] == 3:
-            self.color = self.py3.COLOR_GOOD
+            self.color = "000000"
             self._send_frame()
+            self.color = self.py3.COLOR_GOOD
 
         # Scroll up: Increase number of LEDs
         elif event["button"] == 4:
