@@ -2,7 +2,8 @@
 A [py3status](https://github.com/ultrabug/py3status) module to control various LED lights like [WLED](https://kno.wled.ge/) based devices
 
 Currently supported are devices taking hex encoded colors for consecutive LEDs as input.
-A configurable amount of LEDs representing a light source can be set to either one out of a set of predefined colors - one at a time, or a custom one.
+A configurable amount of LEDs representing a light source can be set to either one out of a set of predefined colors - one at a time, or a custom one.  
+  
 ![py3status-lights screenshot](py3status-lights.png)
 # Configuration
 ## Parameters
