@@ -156,10 +156,10 @@ class Py3status:
         header = ""
 
         if proto == "drgb":
-            header += "020F"
-        elif proto == "artnet":
-            header += "Art-Net0"
-            header += ""
+            # protocol
+            header += "02"
+            # no timeout
+            header += "FF"
 
         return header
 
