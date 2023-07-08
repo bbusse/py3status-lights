@@ -1,0 +1,10 @@
+[project]
+name = "py3status-lights"
+description = "Control your lights with py3status"
+version = "0.1.0"
+authors = [
+    { name = "Björn Busse", email = "bj.rn@baerlin.eu" }
+]
+
+[tool.black]
+line-length = 80
