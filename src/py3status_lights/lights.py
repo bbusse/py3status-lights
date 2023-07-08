@@ -7,6 +7,7 @@ Configuration parameters:
     port: The port to use (default 2342)
     proto: The protocol to use (default 'rgb')
     leds_total: The total number of LEDs (default: 100)
+    mode: The mode to operate LEDs in (default: 'default')
     colors: The list of pre-defined colors to cycle through
     color_picker: A color picker executable (default: ['color_picker'])
     format: The display format for this module (default 'lights')
@@ -14,7 +15,7 @@ Configuration parameters:
 Format placeholders:
     {name} The name of the light source
     {color} The color to set
-    {icon} An module icon
+    {icon} A module icon
     {icon_color} An icon showing the color of the light source
     {leds} The number of LEDs to set
 
@@ -40,6 +41,7 @@ class Py3status:
     port = 2342
     proto = "rgb"
     leds_total = 100
+    mode = "default"
     colors = ["68D74C", "E05B22", "C60D12"]
     color_picker = ["color_picker"]
     icon = "💡"
@@ -168,12 +170,29 @@ class Py3status:
         Compose message to send
         """
         frame = self._header(proto)
+        start = 0
 
-        for n in range(leds_total):
-            if n < leds:
-                frame += color
-            else:
-                frame += "000000"
+        if self.mode == "center":
+            start = int((leds_total - leds) / 2)
+
+        if self.mode == "center" or self.mode == "default":
+            for n in range(leds_total):
+                if n >= start and n < start + leds:
+                    frame += color
+                else:
+                    frame += "000000"
+
+        elif self.mode == "distribute":
+            if leds < 1:
+                return
+
+            m = int(leds_total / leds)
+
+            for n in range(leds_total):
+                if n % m == 1 or m < 2:
+                    frame += color
+                else:
+                    frame += "000000"
 
         return frame
 

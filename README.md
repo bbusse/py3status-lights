@@ -9,9 +9,18 @@ A configurable amount of LEDs representing a light source can be set to either o
 ## Parameters
 * leds - The number of LEDs
 * proto - The protocol to use: RGB versus DRGB
+* mode - The mode to operate the LEDs in. See Modes
 * icon - A module icon
 * icon_color - The icon to indicate the currently set color
 * color_picker - The command to run for picking a color
+
+### Modes
+#### default
+Turn on active LEDs starting at 1
+#### center
+Center all active LEDs
+#### distribute
+Spread the active LEDs evenly with equal distance between them
 
 # Usage
 `left-click` Toggles through the predefined colors  
