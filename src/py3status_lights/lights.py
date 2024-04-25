@@ -42,7 +42,7 @@ class Py3status:
     proto = "rgb"
     leds_total = 100
     mode = "default"
-    colors = ["68D74C", "E05B22", "C60D12"]
+    colors = ["#68D74C", "#E05B22", "#C60D12"]
     color_picker = ["color_picker"]
     icon = "💡"
     icon_color = "●"
