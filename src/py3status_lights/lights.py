@@ -28,6 +28,7 @@ SAMPLE OUTPUT
 {"full_text": "\ud83d\udca1 lounge 23 \u25cf #E05B22", \
 "instance": "lounge 0", "name": "lounge", "color": "#E05B22"}
 """
+
 import socket
 import subprocess
 
